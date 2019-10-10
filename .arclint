@@ -1,0 +1,12 @@
+{
+  "linters": {
+    "black": {
+      "type": "black",
+      "include": "(\\.py$)"
+    },
+    "isort": {
+      "type": "isort",
+      "include": "(\\.py$)"
+    }
+  }
+}
