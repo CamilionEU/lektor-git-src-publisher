@@ -14,10 +14,8 @@ class GitSrcPublisher(Publisher):
 
         This comes (mostly) from lektor.publisher.GithubPagesPublisher.
         """
-        root_path = self._plugin.env.root_path
-
         kwargs["env"] = _patch_git_env(kwargs.pop("env", None), None)
-        return Command(["git"] + args, cwd=root_path, **kwargs)
+        return Command(["git"] + args, **kwargs)
 
     def _git_output(self, args, **kwargs):
         """
