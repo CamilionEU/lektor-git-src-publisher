@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from lektor.pluginsystem import Plugin
-from lektor.publisher import Command, Publisher, _patch_git_env
+from lektor.publisher import Publisher, _patch_git_env
+import subprocess
 
 
 class GitSrcPublisher(Publisher):
@@ -17,16 +18,20 @@ class GitSrcPublisher(Publisher):
         root_path = self._plugin.env.root_path
 
         kwargs["env"] = _patch_git_env(kwargs.pop("env", None), None)
-        return Command(["git"] + args, cwd=root_path, **kwargs)
+        kwargs["stdout"] = subprocess.PIPE
+        kwargs["universal_newlines"] = True
+        kwargs["bufsize"] = 1
+
+        git_cmd = ["git", "-C", root_path]
+        git_cmd.extend(args)
+
+        return subprocess.run(git_cmd, **kwargs)
 
     def _git_output(self, args, **kwargs):
         """
         Run a git Command but return just its output.
         """
-        o = ""
-        for line in self._git(args, **kwargs).output:
-            o += line
-        return o.strip()
+        return self._git(args, **kwargs).stdout
 
     def branch(self, target_url):
         return target_url[1]
@@ -69,17 +74,17 @@ class GitSrcForcePullPublisher(GitSrcPublisher):
     """
 
     def publish(self, target_url, credentials=None, **extra):
-        for line in self._git(["fetch", "--progress"]).output:
-            yield line
+        yield "Fetching updates...\n"
+
+        yield self._git_output(["fetch", "--progress"])
 
         yield "Saving any uncommitted changes...\n"
 
-        for line in self._git(["stash"]).output:
-            yield line
+        yield self._git_output(["stash"])
 
         if not self.is_in_branch(target_url):
             yield "Changing branch as requested...\n"
-            for line in self._git(
+            yield self._git_output(
                 [
                     "checkout",
                     "-b",
@@ -87,18 +92,15 @@ class GitSrcForcePullPublisher(GitSrcPublisher):
                     "-t",
                     self.remote() + "/" + self.branch(target_url),
                 ]
-            ).output:
-                yield line
+            )
 
         yield "Merging remote changes...\n"
-        for line in self._git(
+        yield self._git_output(
             ["merge", "--strategy=recursive", "--strategy-option=theirs"]
-        ).output:
-            yield line
+        )
 
         yield "Restore any previously uncommitted changes...\n"
-        for line in self._git(["stash", "pop"]).output:
-            yield line
+        yield self._git_output(["stash", "pop"])
 
         yield "\nDone!"
 
@@ -118,16 +120,13 @@ class GitSrcPushPublisher(GitSrcPublisher):
 
     def publish(self, target_url, credentials=None, **extra):
         yield "Staging changes"
-        for line in self._git(["add", "."]).output:
-            yield line
+        yield self._git_output(["add", "."])
 
         yield "Commiting changes"
-        for line in self._git(["commit", "-m", "Updated from Lektor"]).output:
-            yield line
+        yield self._git_output(["commit", "-m", "Updated from Lektor"])
 
         yield "Pushing changes"
-        for line in self._git(["push", self.remote(), self.branch(target_url)]).output:
-            yield line
+        yield self._git_output(["push", self.remote(), self.branch(target_url)])
 
         yield "\nDone!"
 
