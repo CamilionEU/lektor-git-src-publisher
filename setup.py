@@ -26,7 +26,7 @@ setup(
     packages=find_packages(),
     py_modules=["lektor_git_src_publisher"],
     url="https://github.com/CamilionEU/lektor-git-src-publisher",
-    version="0.2",
+    version="0.2.1",
     classifiers=[
         "Framework :: Lektor",
         "Environment :: Web Environment",

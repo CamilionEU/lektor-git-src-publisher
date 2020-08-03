@@ -34,27 +34,27 @@ class GitSrcPublisher(Publisher):
         return self._git(args, **kwargs).stdout
 
     def branch(self, target_url):
-        return target_url[1]
+        return target_url[1].strip()
 
     def remote(self):
         """
         Return the configured remote.
         """
-        return self._git_output(["remote"])
+        return self._git_output(["remote"]).strip()
 
     def current_branch(self):
         """
         Return the current branch.
         """
-        return self._git_output(["rev-parse", "--abbrev-ref", "HEAD"])
+        return self._git_output(["rev-parse", "--abbrev-ref", "HEAD"]).strip()
 
     def is_in_branch(self, target_url):
         """
         Return True if the current branch matches the target branch,
         or False otherwise.
         """
-        current = self.current_branch().strip()
-        target = self.branch(target_url).strip()
+        current = self.current_branch()
+        target = self.branch(target_url)
         return current == target
 
 
