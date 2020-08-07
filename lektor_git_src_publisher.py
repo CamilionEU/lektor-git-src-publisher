@@ -15,14 +15,13 @@ class GitSrcPublisher(Publisher):
 
         This comes (mostly) from lektor.publisher.GithubPagesPublisher.
         """
-        root_path = self._plugin.env.root_path
 
         kwargs["env"] = _patch_git_env(kwargs.pop("env", None), None)
         kwargs["stdout"] = subprocess.PIPE
         kwargs["universal_newlines"] = True
         kwargs["bufsize"] = 1
 
-        git_cmd = ["git", "-C", root_path]
+        git_cmd = ["git"]
         git_cmd.extend(args)
 
         return subprocess.run(git_cmd, **kwargs)
