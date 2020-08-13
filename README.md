@@ -28,7 +28,7 @@ In order to install the plugin you can add following to your `.lektorproject`
 file:
 
     [packages]
-    lektor-git-src-publisher = 0.1
+    lektor-git-src-publisher = 0.2.2
 
 Or follow the [official plugin instructions][lektorplugins].
 
@@ -37,19 +37,39 @@ In order to enable the publishers, you also modify your `.lektorproject` file:
     [servers.update]
     name = Update from Remote
     enabled = yes
-    target = gitsrc-forcepull://master
+    target = gitsrc-forcepull://main
 
     [servers.push]
     name = Push to Remote
     enabled = yes
-    target = gitsrc-push://master
+    target = gitsrc-push://main
 
 Notice that this plugin registers the `gitsrc-forcepull://BRANCH` and
 `gitsrc-push://BRANCH` schemas.
 
 It is conceivable to have multiple publishers, e.g. one for a `staging` and
-one for a `master` branch. See the [limitations](#limitations).
+one for a `main` branch. See the [limitations](#limitations).
 
+
+## Trying it out
+
+When running on a POSIX environment, you can:
+
+    cd test_projects
+    # This generates the sample projects and initialises bare git repositories
+    # to facilitate testing.
+    ./gen_projects.sh
+
+Then run one of the test projects as follows:
+
+    # Most standard setup
+    lektor --project minimal serve
+    # An example with the .lektorproject not running at the root of the repo
+    lektor --project nested/project/minimal serve
+
+When using the special publisher, the bare repositories created in
+`test_projects/minimal.git` and `test_projects/nested.git` respectively will
+be updated with your changes.
 
 
 ## Getting in touch / collaborating

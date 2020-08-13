@@ -1,0 +1,86 @@
+# This is a shell archive.  Save it in a file, remove anything before
+# this line, and then unpack it by entering "sh file".  Note, it may
+# create directories; files and directories will be owned by you and
+# have default permissions.
+#
+# This archive contains:
+#
+#	minimal/
+#	minimal/models
+#	minimal/models/page.ini
+#	minimal/templates
+#	minimal/templates/layout.html
+#	minimal/templates/page.html
+#	minimal/content
+#	minimal/content/contents.lr
+#	minimal/minimal.lektorproject
+#
+echo c - minimal/
+mkdir -p minimal/ > /dev/null 2>&1
+echo c - minimal/models
+mkdir -p minimal/models > /dev/null 2>&1
+echo x - minimal/models/page.ini
+sed 's/^X//' >minimal/models/page.ini << 'df8f0689f230a23a7f7e2d05e24e46d1'
+X[model]
+Xname = Page
+Xlabel = {{ this.title }}
+X
+X[fields.title]
+Xlabel = Title
+Xtype = string
+X
+X[fields.body]
+Xlabel = Body
+Xtype = markdown
+df8f0689f230a23a7f7e2d05e24e46d1
+echo c - minimal/templates
+mkdir -p minimal/templates > /dev/null 2>&1
+echo x - minimal/templates/layout.html
+sed 's/^X//' >minimal/templates/layout.html << '8a98e95a085dcb9c29018ce470d22d70'
+X<!doctype html>
+X<meta charset="utf-8">
+X<title>{% block title %}Welcome{% endblock %} — standard</title>
+X<body>
+X  <header>
+X    <h1>standard</h1>
+X  </header>
+X  <div class="page">
+X    {% block body %}{% endblock %}
+X  </div>
+X</body>
+8a98e95a085dcb9c29018ce470d22d70
+echo x - minimal/templates/page.html
+sed 's/^X//' >minimal/templates/page.html << '3a3f864ca8844f9c180602023b8ae7d2'
+X{% extends "layout.html" %}
+X{% block title %}{{ this.title }}{% endblock %}
+X{% block body %}
+X  <h2>{{ this.title }}</h2>
+X  {{ this.body }}
+X{% endblock %}
+3a3f864ca8844f9c180602023b8ae7d2
+echo c - minimal/content
+mkdir -p minimal/content > /dev/null 2>&1
+echo x - minimal/content/contents.lr
+sed 's/^X//' >minimal/content/contents.lr << '173e32fd71135ede393a73144b237f33'
+Xtitle: Welcome to standard!
+X---
+Xbody:
+X
+XThis is a basic demo website that shows how to use Lektor for a basic
+Xwebsite with some pages.
+173e32fd71135ede393a73144b237f33
+echo x - minimal/minimal.lektorproject
+sed 's/^X//' >minimal/minimal.lektorproject << '9f65fb86f8bc65d80c04a89d7f56062a'
+X[project]
+Xname = minimal
+X
+X[servers.push]
+Xname = Publish
+Xenabled = yes
+Xtarget = gitsrc-push://main
+X
+X[packages]
+Xlektor-git-src-publisher >= 0.2.1
+9f65fb86f8bc65d80c04a89d7f56062a
+exit
+

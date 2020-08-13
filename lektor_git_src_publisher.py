@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from lektor.pluginsystem import Plugin
 from lektor.publisher import Publisher, _patch_git_env
+import os
 import subprocess
 
 
@@ -22,7 +23,12 @@ class GitSrcPublisher(Publisher):
         kwargs["universal_newlines"] = True
         kwargs["bufsize"] = 1
 
-        git_cmd = ["git", "-C", root_path]
+        git_cmd = ["git"]
+        # This might help mitigate an issue while running under Docker
+        if root_path != os.getcwd():
+            # This is important because lektor might be running with --project
+            git_cmd.extend(["-C", root_path])
+
         git_cmd.extend(args)
 
         return subprocess.run(git_cmd, **kwargs)

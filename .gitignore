@@ -1,3 +1,8 @@
+# Test projects
+test_projects/minimal
+test_projects/minimal.git
+test_projects/nested
+test_projects/nested.git
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
