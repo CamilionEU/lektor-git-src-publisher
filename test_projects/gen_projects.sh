@@ -43,7 +43,8 @@ EOF
 }
 
 # Perform sanity checks and refuse running if necessary
-if ! which -s git; then
+GIT_BIN="$(which git)"
+if [ -z "${GIT_BIN}" ] || [ ! -x "${GIT_BIN}" ]; then
 	echo "Could not find the git binary in your system" >> /dev/stderr
 	exit 1
 fi
