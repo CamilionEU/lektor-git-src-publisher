@@ -16,7 +16,7 @@ class GitSrcPublisher(Publisher):
 
         This comes (mostly) from lektor.publisher.GithubPagesPublisher.
         """
-        root_path = self._plugin.env.root_path
+        root_path = self.env.root_path
 
         kwargs["env"] = _patch_git_env(kwargs.pop("env", None), None)
         kwargs["stdout"] = subprocess.PIPE
@@ -142,11 +142,6 @@ class GitSrcPublisherPlugin(Plugin):
     description = u"Simple plugin to use Lektor to abstract away git usage."
 
     def on_setup_env(self, **extra):
-        # Add reference to self
-        # TODO: is this safe? :-D
-        GitSrcForcePullPublisher._plugin = self
-        GitSrcPushPublisher._plugin = self
-
         # Register publishers
         self.env.add_publisher("gitsrc-forcepull", GitSrcForcePullPublisher)
         self.env.add_publisher("gitsrc-push", GitSrcPushPublisher)
