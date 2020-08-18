@@ -28,7 +28,7 @@ In order to install the plugin you can add following to your `.lektorproject`
 file:
 
     [packages]
-    lektor-git-src-publisher = 0.2.2
+    lektor-git-src-publisher = 0.3
 
 Or follow the [official plugin instructions][lektorplugins].
 
